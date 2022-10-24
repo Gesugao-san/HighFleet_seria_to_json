@@ -8,20 +8,23 @@
   <title>A Meaningful Page Title</title>
 </head>
 <body>
+  <h3>HighFleed «.seria» to «.json» file converter.</h3>
   <p>
-    Give me your HighFleed ".seria" file and I will give you ".json" file.
-    <a href="http://github.com/Gesugao-san/HighFleet_seria_to_json">Source</a>,
+    Give me your HighFleed «.seria» file and I will give you «.json» file. Expecting ship files. Path: "<code>Steam\steamapps\common\HighFleet\Ships</code>".<br>
+    Links:
     <a href="http://gesugao-san.github.io/HighFleet_seria_to_json/">Site</a>,
+    <a href="http://github.com/Gesugao-san/HighFleet_seria_to_json">Source</a>,
     <a href="http://store.steampowered.com/app/1434950/">HighFleet</a>.
   </p>
   <button type="button" id="content-clear" disabled>Clear</button>
   <button type="button" id="file-save" disabled>Save (blob)</button>
+  <!-- <button type="button" id="load-example" disabled>Load example</button> -->
   <input type="file" id="file-input" accept=".seria, .txt" />
   <!-- The `multiple` attribute lets users select multiple files. -->
   <!-- <input type="file" id="file-selector" multiple> -->
   <h3>Contents of the file:</h3>
   <div>
-    <textarea id="file-content" rows="30" cols="100" placeholder="Type, paste, cut text here..." type="text"></textarea>
+    <textarea id="file-content" placeholder="Type, paste, cut text here..." type="text"></textarea>
   </div>
   <!-- <hr> -->
 </body>

@@ -9,14 +9,16 @@
 </head>
 <body>
   <p>
-    Lorem ipsum dolor sit amet, legere ancillae ne vis.
+    Give me your HighFleed ".seria" file and I will give you ".json" file.
+    <a href="http://github.com/Gesugao-san/HighFleet_seria_to_json">Source</a>,
+    <a href="http://gesugao-san.github.io/HighFleet_seria_to_json/">Site</a>,
+    <a href="http://store.steampowered.com/app/1434950/">HighFleet</a>.
   </p>
-  <!-- <a href="data:application/xml;charset=utf-8,your code here" download="filename.html">Save</a> -->
+  <button type="button" id="content-clear" disabled>Clear</button>
+  <button type="button" id="file-save" disabled>Save (blob)</button>
   <input type="file" id="file-input" accept=".seria, .txt" />
   <!-- The `multiple` attribute lets users select multiple files. -->
   <!-- <input type="file" id="file-selector" multiple> -->
-  <button type="button" id="content-clear" disabled>Clear</button>
-  <button type="button" id="file-save" disabled>Save</button>
   <h3>Contents of the file:</h3>
   <div>
     <textarea id="file-content" rows="30" cols="100" placeholder="Type, paste, cut text here..." type="text"></textarea>

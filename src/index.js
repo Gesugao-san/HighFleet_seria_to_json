@@ -6,63 +6,76 @@ function convertSeriaStringToJson(input) {
   }
   input = input.replaceAll('\r\n', '\n');
   let array = input.split('\n');
-  let brackets_num = 0;
-  let unnamed_column_num = 0;
-  let arr_dup_keys = [];
-  let arr_dup_keys_num = 0;
 
   displayContents(array);
   array.shift();
   array = array.filter(Boolean); // clears newline
 
+  let depth_level = -1;
+  let brackets_and_unnamed_nums = {};
   array = array.map((entry, index) => {
     if (entry.includes('=')) {
       let [key, data] = entry.split('=');
       return '"' + key + '": "' + data + '",';
     }
-    if (entry.includes('{')) {  //brackets "{"
-      brackets_num = brackets_num + 1;
-      return '"mm_class__dup' + brackets_num + '": {';
+    if (entry == '{') {  //brackets "{"
+      depth_level += 1;
+      console.log('depth_level:', depth_level, entry, array[index - 1], array[index + 1]);
+      if (!brackets_and_unnamed_nums[depth_level]) {
+        brackets_and_unnamed_nums[depth_level] = {
+          'brackets_num': 0,
+          'unnamed_column_num': 0
+        }
+      }
+      brackets_and_unnamed_nums[depth_level]['brackets_num'] += 1;
+      return '"mm_class__num' + brackets_and_unnamed_nums[depth_level]['brackets_num'] + '": {';
     }
     if (entry == '}' && (array.length - index) > 1) {  //brackets "{"
-      brackets_num = brackets_num + 1;
+      depth_level -= 1;
       return '},';
     }
     if (!isNaN(entry)) {
-      unnamed_column_num = unnamed_column_num + 1;
-      return '"unnamed__dup' + unnamed_column_num + '": "' + entry + '",';
+      if (!brackets_and_unnamed_nums[depth_level]) {
+        brackets_and_unnamed_nums[depth_level] = {
+          'brackets_num': 0,
+          'unnamed_column_num': 0
+        }
+      }
+      brackets_and_unnamed_nums[depth_level]['unnamed_column_num'] += 1;
+      return '"unnamed__num' + brackets_and_unnamed_nums[depth_level]['unnamed_column_num'] + '": "' + entry + '",';
     }
+    if (index > (array.length - 5)) console.log('brackets_and_unnamed_nums', brackets_and_unnamed_nums);
     return entry;
   });
 
   array = ['{', ...array]; //array.shift('{');
 
-  //let depth_level = 0;
+  depth_level = -1;
+  let arr_dup_keys = {};
   for (let line = 0; line < array.length; line++) {
     const el = array[line];
-    /* if (el.includes('{')) {
-      depth_level = depth_level + 1;
+    if (el.includes('{')) {
+      depth_level += 1;
+      if (!arr_dup_keys[depth_level]) {
+        arr_dup_keys[depth_level] = {
+          'dup_keys_num': 0,
+          'dup_keys': []
+        }
+      }
+      console.log('depth_level:', depth_level, array[line - 1]);
     }
     if (el.includes('}')) {
-      depth_level = depth_level - 1;
-    } */
+      depth_level -= 1;
+      console.log('depth_level:', depth_level, array[line + 1]);
+    }
     if (el.includes(':')) {
-      //let keyy = el.split(':')[0];
       let [keyy, dataa] = el.split(': ');
-      /* if (!arr_dup_keys[key]) {
-        arr_dup_keys[key] = {line, data};
+      if (!arr_dup_keys[depth_level]['dup_keys'].includes(keyy)) {
+        arr_dup_keys[depth_level]['dup_keys'].push(keyy);
       } else {
-        array[arr_dup_keys[key][0]] = '"' + key + '__dup' + arr_dup_keys_num + '": "' + arr_dup_keys[key][1] + '",';
-        arr_dup_keys_num = arr_dup_keys_num + 1;
-        array[line] = '"' + key + '__dup' + arr_dup_keys_num + '": "' + data + '",';
-        arr_dup_keys_num = arr_dup_keys_num + 1;
-      } */
-      if (!arr_dup_keys[keyy]) {
-        arr_dup_keys.push(keyy);
-      } else {
-        console.warn('dup:', keyy, 'and:', el);
-        array[line] = '"' + keyy + '__dup' + arr_dup_keys_num + '": "' + data + '",';
-        arr_dup_keys_num = arr_dup_keys_num + 1;
+        console.warn('dup:', depth_level, 'key:', keyy, 'data:', dataa, 'full:', el);
+        array[line] = '"' + keyy.replaceAll('"', '') + '__dup' + arr_dup_keys[depth_level]['dup_keys_num'] + '": ' + dataa;
+        arr_dup_keys[depth_level]['dup_keys_num'] += 1;
       }
       dataa = dataa.replaceAll('"', '').replaceAll(',', '');
       if (!isNaN(dataa) && !el.includes('}')) {
@@ -85,6 +98,8 @@ function convertSeriaStringToJson(input) {
 
   const json = JSON.parse(array);
   console.log('json:\n', json);
+  console.log('arr_dup_keys:\n', arr_dup_keys);
+
   let stringified = JSON.stringify(json, undefined, 2);
   //displayContents(stringified);
   const element = document.getElementById('file-content');

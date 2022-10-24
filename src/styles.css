@@ -1,13 +1,11 @@
 
-fieldset {
-  background-color: gainsboro;
+
+:root {
+  color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-  fieldset {
-    background-color: darkslategray;
-  }
-}
+/* @media (prefers-color-scheme: dark) {
+} */
 
 /* div {
   border: 1px solid gray;

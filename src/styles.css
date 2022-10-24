@@ -1,0 +1,20 @@
+
+fieldset {
+  background-color: gainsboro;
+}
+
+@media (prefers-color-scheme: dark) {
+  fieldset {
+    background-color: darkslategray;
+  }
+}
+
+/* div {
+  border: 1px solid gray;
+} */
+
+textarea {
+  width: auto; /* 300px; */
+  height: auto;
+}
+

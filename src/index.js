@@ -1,30 +1,28 @@
 
 
 function log2html(...input) {
+  if (!document.getElementById('output_log').checked) return;
   let logger = document.getElementById('log');
-  for (let i = 0; i < input.length; i++) {
-    const element = input[i];
+  let output = '';
+  let show_as_error = false;
+  let show_as_warn = false;
+  input.map((x) => {
     if (typeof x == 'object') {
-      logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(element) : element) + ' ';
-    } else {
-      logger.innerHTML += element + ' ';
+      x = JSON && JSON.stringify ? JSON.stringify(x) : x;
     }
+    if (String(x).includes('undefined')) show_as_error = true;
+    if (String(x).includes('DUP')) show_as_warn = true;
+    return output += x + ' ';
+  });
+  output = output.slice(0, -1); // last space
+  if (show_as_error) {
+    return logger.innerHTML += '<span class="error">' + output + '</span><br />';
+  } else if (show_as_warn) {
+    return logger.innerHTML += '<span class="warning">' + output + '</span><br />';
+  } else {
+    logger.innerHTML += '<span class="ok">' + output + '</span><br />';
   }
-  logger.innerHTML += '<br />';
 }
-/* function cleanup_input(...input) {
-  return input.join(' ').replaceAll('\n', '');
-}
-function log(...input) {
-  log2html(input);
-  input = cleanup_input(input);
-  console.log(input);
-}
-function warn(...input) {
-  log2html(input);
-  input = cleanup_input(input);
-  console.warn(input);
-} */
 
 function convertSeriaStringToJson(input) {
   if (!input || typeof input != 'string') {
@@ -32,6 +30,8 @@ function convertSeriaStringToJson(input) {
     log2html('Nothing to convert here.');
     return;
   }
+  setTimeout(() => { alert('Converting in progress, please wait...'); }, 1);
+
   input = input.replaceAll('\r\n', '\n');
   let array = input.split('\n');
 
@@ -48,8 +48,8 @@ function convertSeriaStringToJson(input) {
     }
     if (entry == '{') {  //brackets "{"
       depth_level += 1;
-      console.log('depth_level:', depth_level, entry, array[index - 1], array[index + 1]);
-      log2html('depth_level:', depth_level, entry, array[index - 1], array[index + 1]);
+      console.log('depth:', depth_level, entry, array[index - 1], array[index + 1]);
+      log2html('depth:', depth_level, entry, array[index - 1], array[index + 1]);
       if (!brackets_and_unnamed_nums[depth_level]) {
         brackets_and_unnamed_nums[depth_level] = {
           'brackets_num': 0,
@@ -74,8 +74,8 @@ function convertSeriaStringToJson(input) {
       return '"unnamed__num' + brackets_and_unnamed_nums[depth_level]['unnamed_column_num'] + '": "' + entry + '",';
     }
     if (index > (array.length - 5)) {
-      console.log('brackets_and_unnamed_nums', brackets_and_unnamed_nums);
-      log2html('brackets_and_unnamed_nums', brackets_and_unnamed_nums);
+      console.log('brackets_and_unnamed_nums:', brackets_and_unnamed_nums);
+      log2html('\nbrackets_and_unnamed_nums:', brackets_and_unnamed_nums, '\n');
     }
     return entry;
   });
@@ -94,21 +94,21 @@ function convertSeriaStringToJson(input) {
           'dup_keys': []
         }
       }
-      console.log('depth_level:', depth_level, array[line - 1]);
-      log2html('depth_level:', depth_level, array[line - 1]);
+      console.log('depth:', depth_level, array[line - 1]);
+      log2html('depth:', depth_level, array[line - 1]);
     }
     if (el.includes('}')) {
       depth_level -= 1;
-      console.log('depth_level:', depth_level, array[line + 1]);
-      log2html('depth_level:', depth_level, array[line + 1]);
+      console.log('depth:', depth_level, array[line + 1]);
+      log2html('depth:', depth_level, array[line + 1]);
     }
     if (el.includes(':')) {
       let [keyy, dataa] = el.split(': ');
       if (!arr_dup_keys[depth_level]['dup_keys'].includes(keyy)) {
         arr_dup_keys[depth_level]['dup_keys'].push(keyy);
       } else {
-        console.warn('dup:', depth_level, 'key:', keyy, 'data:', dataa, 'full:', el);
-        log2html('dup:', depth_level, 'key:', keyy, 'data:', dataa, 'full:', el);
+        console.warn('DUP:', depth_level, 'KEY:', keyy, 'DATA:', dataa, 'FULL:', el);
+        log2html('DUP:', el);
         array[line] = '"' + keyy.replaceAll('"', '') + '__dup' + arr_dup_keys[depth_level]['dup_keys_num'] + '": ' + dataa;
         arr_dup_keys[depth_level]['dup_keys_num'] += 1;
       }
@@ -134,8 +134,8 @@ function convertSeriaStringToJson(input) {
   const json = JSON.parse(array);
   console.log('json:\n', json);
   console.log('arr_dup_keys:\n', arr_dup_keys);
-  log2html('json:', json);
-  log2html('arr_dup_keys:', arr_dup_keys);
+  log2html('\njson:', json, '\n');
+  log2html('arr_dup_keys:', arr_dup_keys, '\n');
 
   let stringified = JSON.stringify(json, undefined, 2);
   //displayContents(stringified);
@@ -174,6 +174,7 @@ function clearContents() {
   //window.location.reload();
   document.getElementById('file-input').value = null;
   document.getElementById('file-content').textContent = '';
+  document.getElementById('log').textContent = '';
   document.getElementById('file-save').disabled = true;
   document.getElementById('content-clear').disabled = true;
 }

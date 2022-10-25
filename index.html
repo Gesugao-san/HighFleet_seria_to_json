@@ -8,29 +8,42 @@
   <title>HighFleet «.seria» to «.json» file converter</title>
 </head>
 <body>
-  <h3>HighFleet «.seria» to «.json» file converter.</h3>
-  <p>
-    Give me your HighFleet «.seria» file and I will give you «.json» file. Expecting ship files. Path: "<code>Steam\steamapps\common\HighFleet\Ships</code>".<br>
-    Links:
-    <a href="http://gesugao-san.github.io/HighFleet_seria_to_json/">Site</a>,
-    <a href="http://github.com/Gesugao-san/HighFleet_seria_to_json">Source</a>,
-    <a href="http://store.steampowered.com/app/1434950/">HighFleet</a>,
-    <a href="http://jsonformatter.curiousconcept.com/">Check my json file</a>.
-  </p>
-  <button type="button" id="content-clear" disabled>Clear</button>
-  <button type="button" id="file-save" disabled>Save (blob)</button>
-  <!-- <button type="button" id="load-example" disabled>Load example</button> -->
-  <input type="file" id="file-input" accept=".seria, .txt" />
-  <!-- The `multiple` attribute lets users select multiple files. -->
-  <!-- <input type="file" id="file-selector" multiple> -->
-  <h3>Contents of the file:</h3>
+  <h3>HighFleet «.seria» to «.json» file converter</h3>
+  <fieldset>
+    <div>
+      Give me your HighFleet «.seria» file and I will give you «.json» file. Expecting ship files from: "<code>\HighFleet\Ships</code>".
+      <br>
+      Links:
+      <a href="http://gesugao-san.github.io/HighFleet_seria_to_json/">Site</a>,
+      <a href="http://github.com/Gesugao-san/HighFleet_seria_to_json">Source</a>,
+      <a href="http://store.steampowered.com/app/1434950/">HighFleet</a>,
+      <a href="http://jsonformatter.curiousconcept.com/">Check json file</a>,
+      <a href="https://jsongrid.com/json-formatter">View json file</a>.
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Actions and options</legend>
+    <div>
+      <button type="button" id="content-clear" disabled>Clear</button>
+      <button type="button" id="file-save" disabled>Save (blob)</button>
+      <!-- <button type="button" id="load-example" disabled>Load example</button> -->
+      <input type="file" id="file-input" accept=".seria, .txt" />
+      <!-- The `multiple` attribute lets users select multiple files. -->
+      <!-- <input type="file" id="file-selector" multiple> -->
+      <hr>
+      <input type="checkbox" id="output_log" name="output_log" unchecked>
+      <label for="output_log">Output log below output <small>(warning: may be heavy for process)</small></label>
+    </div>
+  </fieldset>
+
+  <h3>Output:</h3>
   <div>
-    <textarea id="file-content" placeholder="Type, paste, cut text here..." type="text"></textarea>
+    <textarea id="file-content" placeholder="Select «.seria» file above to continue..." type="text"></textarea>
   </div>
   <h3>Log</h3>
-  <p id="log_p">
-    <pre id="log"></pre>
-  </p>
+  <pre id="log"></pre>
+  <hr>
 </body>
 </html>
 

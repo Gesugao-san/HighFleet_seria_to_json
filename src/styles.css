@@ -2,7 +2,15 @@
 
 :root {
   color-scheme: dark;
+  display: block;
+
+  /* fallbacks for dark theme */
+  background-color: #121212;
+  color: white;
 }
+
+/* * {
+} */
 
 /* @media (prefers-color-scheme: dark) {
 } */
@@ -19,7 +27,7 @@
 
 textarea {
   width: 99%;
-  height: 70vh;
+  height: 60vh;
   display: block;
   padding: 12px 20px;
   box-sizing: border-box;
@@ -29,9 +37,9 @@ textarea {
   resize: none;
 }
 
-[id^="log_p"]p {
+pre {
+  background-color: #3b3b3b;
   width: 99%;
-  height: 70vh;
   display: block;
   padding: 12px 20px;
   box-sizing: border-box;
@@ -39,5 +47,21 @@ textarea {
   border-radius: 4px;
   font-size: 14px;
   resize: none;
+  white-space: -moz-pre-wrap; /* Mozilla, supported since 1999 */
+  white-space: -pre-wrap; /* Opera */
+  white-space: -o-pre-wrap; /* Opera */
+  white-space: pre-wrap; /* CSS3 - Text module (Candidate Recommendation) http://www.w3.org/TR/css3-text/#white-space */
+  word-wrap: break-word; /* IE 5.5+ */
+}
+
+
+#log span.ok {
+  color: white;
+}
+#log span.warning {
+  color: yellow;
+}
+#log span.error {
+  color: red;
 }
 

@@ -29,7 +29,7 @@ textarea {
   resize: none;
 }
 
-[id^="log"]p {
+[id^="log_p"]p {
   width: 99%;
   height: 70vh;
   display: block;

@@ -1,14 +1,27 @@
 
 
-function log(...input) {
+function log2html(input) {
   var logger = document.getElementById('log');
   if (typeof input == 'object') {
     console.log(input); //.dir //.table
-      logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(input) : input) + '<br />';
+    logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(input) : input) + '<br />';
   } else {
     console.log(input.join(', '));
-      logger.innerHTML += input + '<br />';
+    logger.innerHTML += input + '<br />';
   }
+}
+function cleanup_input(...input) {
+  return input.join(' ').replaceAll('\n', '');
+}
+function log(...input) {
+  log2html(input);
+  input = cleanup_input(input);
+  console.log(input);
+}
+function warn(...input) {
+  log2html(input);
+  input = cleanup_input(input);
+  console.warn(input);
 }
 
 function convertSeriaStringToJson(input) {

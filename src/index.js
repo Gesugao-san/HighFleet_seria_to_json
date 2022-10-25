@@ -1,5 +1,16 @@
 
 
+function log(...input) {
+  var logger = document.getElementById('log');
+  if (typeof input == 'object') {
+    console.log(input); //.dir //.table
+      logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(input) : input) + '<br />';
+  } else {
+    console.log(input.join(', '));
+      logger.innerHTML += input + '<br />';
+  }
+}
+
 function convertSeriaStringToJson(input) {
   if (!input || typeof input != 'string') {
     return console.warn('Nothing to convert here.');
@@ -20,7 +31,7 @@ function convertSeriaStringToJson(input) {
     }
     if (entry == '{') {  //brackets "{"
       depth_level += 1;
-      console.log('depth_level:', depth_level, entry, array[index - 1], array[index + 1]);
+      log('depth_level:', depth_level, entry, array[index - 1], array[index + 1]);
       if (!brackets_and_unnamed_nums[depth_level]) {
         brackets_and_unnamed_nums[depth_level] = {
           'brackets_num': 0,
@@ -44,7 +55,7 @@ function convertSeriaStringToJson(input) {
       brackets_and_unnamed_nums[depth_level]['unnamed_column_num'] += 1;
       return '"unnamed__num' + brackets_and_unnamed_nums[depth_level]['unnamed_column_num'] + '": "' + entry + '",';
     }
-    if (index > (array.length - 5)) console.log('brackets_and_unnamed_nums', brackets_and_unnamed_nums);
+    if (index > (array.length - 5)) log('brackets_and_unnamed_nums', brackets_and_unnamed_nums);
     return entry;
   });
 
@@ -62,11 +73,11 @@ function convertSeriaStringToJson(input) {
           'dup_keys': []
         }
       }
-      console.log('depth_level:', depth_level, array[line - 1]);
+      log('depth_level:', depth_level, array[line - 1]);
     }
     if (el.includes('}')) {
       depth_level -= 1;
-      console.log('depth_level:', depth_level, array[line + 1]);
+      log('depth_level:', depth_level, array[line + 1]);
     }
     if (el.includes(':')) {
       let [keyy, dataa] = el.split(': ');
@@ -97,8 +108,8 @@ function convertSeriaStringToJson(input) {
   array = array.join('\n');
 
   const json = JSON.parse(array);
-  console.log('json:\n', json);
-  console.log('arr_dup_keys:\n', arr_dup_keys);
+  log('json:\n', json);
+  log('arr_dup_keys:\n', arr_dup_keys);
 
   let stringified = JSON.stringify(json, undefined, 2);
   //displayContents(stringified);
@@ -127,7 +138,7 @@ function displayContents(contents) {
   document.getElementById('file-save').disabled = false;
   document.getElementById('content-clear').disabled = false;
   convertSeriaStringToJson(contents);
-  //console.log('contents:\n', contents);
+  //log('contents:\n', contents);
 }
 
 function clearContents() {
@@ -149,14 +160,26 @@ function saveSingleFile() {
   link.target = "_blank";
   link.href = url;
   link.click();
-  console.log('link:', link);
-  console.log('url:', url);
+  log('link:', link);
+  log('url:', url);
 }
 
+(() => {
+  /* var old = log;
+  var logger = document.getElementById('log');
+  log = function () {
+    for (var i = 0; i < arguments.length; i++) {
+      if (typeof arguments[i] == 'object') {
+          logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
+      } else {
+          logger.innerHTML += arguments[i] + '<br />';
+      }
+    }
+  } */
+});
 
 if (document) document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('file-input').addEventListener('change', readSingleFile, false);
   document.getElementById('file-save').addEventListener('click', saveSingleFile, false);
   document.getElementById('content-clear').addEventListener('click', clearContents, false);
-});
-
+})();

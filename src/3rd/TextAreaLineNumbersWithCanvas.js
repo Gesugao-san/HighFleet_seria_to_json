@@ -9,24 +9,24 @@
 
 var TextAreaLineNumbersWithCanvas = function() {
   var div = document.createElement('div');
-  var cssTable = 'padding:0px 0px 0px 0px!important; margin:0px 0px 0px 0px!important; font-size:1px;line-height:0px; width:auto;';
-  var cssTd1 = 'border:1px #345 solid; border-right:0px; vertical-align:top; width:1px;';
-  var cssTd2 = 'border:1px #345 solid; border-left:0px; vertical-align:top;';
-  var cssButton = 'width:120px; height:40px; border:1px solid #333 !important; border-bottom-color: #484!important; color:#ffe; background-color:#222;';
-  var cssCanvas = 'border:0px; background-color:#1c1c20; margin-top:0px; padding-top:0px;';
-  var cssTextArea = 'width:auto;'
-    + 'height:500px;'
-    + 'font-size:11px;'
-    + 'font-family:monospace;'
-    + 'line-height:15px;'
-    + 'font-weight:500;'
+  var cssTable = 'padding: 0px 0px 0px 0px !important; margin: 0px 0px 0px 0px !important; font-size: 1px; line-height: 0px; width: auto;';
+  var cssTd1 = 'border: 1px #345 solid; border-right: 0px; vertical-align: top; width: 1px;';
+  var cssTd2 = 'border: 1px #345 solid; border-left: 0px; vertical-align: top;';
+  var cssButton = 'width: 120px; height: 40px; border: 1px solid #333 !important; border-bottom-color: #484 !important; color: #ffe; background-color: #222;';
+  var cssCanvas = 'border: 0px; background-color: #1c1c20; margin-top: 0px; padding-top: 0px;';
+  var cssTextArea = 'width: auto;'
+    + 'height: 500px;'
+    + 'font-size: 11px;'
+    + 'font-family: monospace;'
+    + 'line-height: 15px;'
+    + 'font-weight: 500;'
     + 'margin: 0px 0px 0px 0px;'
     + 'padding: 0px 0px 0px 0px;'
     + 'resize: both;'
-    + 'color:#ffa;'
-    + 'border:0px;'
-    + 'background-color:#222;'
-    + 'white-space:nowrap; overflow:auto;'
+    + 'color: #ffa;'
+    + 'border: 0px;'
+    + 'background-color: #222;'
+    + 'white-space: nowrap; overflow: auto;'
     // supported only in opera 12.x
     + 'scrollbar-arrow-color: #ee8;'
     + 'scrollbar-base-color: #444;'
@@ -40,8 +40,8 @@ var TextAreaLineNumbersWithCanvas = function() {
 
   // LAYOUT (table 2 panels)
   var table = document.createElement('table');
-  table.setAttribute('cellspacing','0');
-  table.setAttribute('cellpadding','0');
+  table.setAttribute('cellspacing', '0');
+  table.setAttribute('cellpadding', '0');
   table.setAttribute('style', cssTable);
 
   var tr = document.createElement('tr');
@@ -56,7 +56,7 @@ var TextAreaLineNumbersWithCanvas = function() {
 
   // TEXTAREA
   var ta = this.evalnode = document.createElement('textarea');
-  ta.setAttribute('cols','80');
+  ta.setAttribute('cols', '120');
   ta.setAttribute('style', cssTextArea);
   //ta.value = this.S.get('eval') || '';  // get previous executed value ;)
 
@@ -77,15 +77,15 @@ var TextAreaLineNumbersWithCanvas = function() {
       if (canvas.height != this.clientHeight) canvas.height = this.clientHeight; // on resize
       var ctx = canvas.getContext("2d");
       ctx.fillStyle = "#303030";
-      ctx.fillRect(0, 0, 42, this.scrollHeight+1);
+      ctx.fillRect(0, 0, 42, this.scrollHeight + 1);
       ctx.fillStyle = "#808080";
-      ctx.font = "11px monospace"; // NOTICE: must match TextArea font-size(11px) and lineheight(15) !!!
-      var startIndex = Math.floor(this.scrollTop / 15,0);
-      var endIndex = startIndex + Math.ceil(this.clientHeight / 15,0);
-      for (var i = startIndex; i < endIndex; i++) {
-        var ph = 10 - this.scrollTop + (i*15);
-        var text = ''+(1+i);  // line number
-        ctx.fillText(text,40-(text.length*6),ph);
+      ctx.font = "11px monospace"; // NOTICE: must match TextArea font- size(11px) and lineheight(15) !!!
+      var startIndex = Math.floor(this.scrollTop / 15, 0);
+      var endIndex = startIndex + Math.ceil(this.clientHeight / 15, 0);
+      for (var i = startIndex; i < endIndex; i++ ) {
+        var ph = 10 - this.scrollTop + (i * 15);
+        var text = '' + (1 + i);  // line number
+        ctx.fillText(text, 40 - (text.length * 6), ph);
       }
     }
     catch(e) {

@@ -2,7 +2,7 @@
 
 
 function getUserAgent() {
-  console.clear();
+  //console.clear();
   if (window && window.navigator && window.navigator.userAgent) console.debug('userAgent:', window.navigator.userAgent);
 }
 
@@ -249,14 +249,16 @@ function readSingleFile(e) {
       //convertJsonStringToSeria(contents_json);
       document.getElementById('content-process').disabled = false;
     } else {
-      return alert('Unknown error occurred!\nDetails: extesion "' + extesion + '".\nAbort reading.');
+      return alert('Unknown error occurred!\nDetails: extesion "' + extesion + '". Please clear all before contunue.\nAbort reading.');
     }
   }, false);
 
   if (file) {
     reader.readAsText(file);
   }
+
   onBusyEnd();
+  document.getElementById('content-process').disabled = false;
 
   console.log('Reading file done.');
   log2html('Reading file done.');
@@ -281,10 +283,10 @@ function clearContentsSoft() {
   document.getElementById('file-seria-content').textContent = '';
   document.getElementById('file-json-content').textContent = '';
   document.getElementById('file-input').value = null;
+  document.getElementById('content-clear').disabled = true;
   document.getElementById('content-process').disabled = true;
   document.getElementById('file-save-as-json').disabled = true;
   document.getElementById('file-save-as-seria').disabled = true;
-  document.getElementById('content-clear').disabled = true;
 }
 
 

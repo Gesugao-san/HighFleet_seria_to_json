@@ -206,6 +206,7 @@ function convertJsonStringToSeria(input) {
 
   displayContents(array, 'file-seria-content');
   document.getElementById('file-save-as-seria').disabled = false;
+  document.getElementById('file-save-as-seria-minified').disabled = false;
 }
 
 
@@ -286,25 +287,15 @@ function clearContentsSoft() {
   document.getElementById('content-process').disabled = true;
   document.getElementById('file-save-as-json').disabled = true;
   document.getElementById('file-save-as-seria').disabled = true;
+  document.getElementById('file-save-as-seria-minified').disabled = true;
 }
 
-
-function saveSingleFileAsJson() {
-  const element = document.getElementById('file-json-content');
-  const contents = element.textContent;
-  saveSingleFile(contents, 'json');
-}
-function saveSingleFileAsSeria() {
-  const element = document.getElementById('file-seria-content');
-  const contents = element.textContent;
-  saveSingleFile(contents, 'seria');
-}
 
 // https://stackoverflow.com/a/58356250/8175291
 function saveSingleFile(contents, extesion) {
   let file_name = document.getElementById('file-input').files[0].name;
   if (!file_name.includes('.')) return console.error('File has no extesion! Abort downloading.');
-  file_name = file_name.split('.')[0] + '.' + extesion;
+  file_name = file_name.split('.')[0] + extesion;
   if (contents == '') {
     console.warn('Nothing to save here.');
     log2html('Nothing to save here.');
@@ -327,6 +318,54 @@ function saveSingleFile(contents, extesion) {
   body.removeChild(saver);
   URL.revokeObjectURL(blobURL);
 }
+function saveSingleFileAsJson() {
+  const element = document.getElementById('file-json-content');
+  const contents = element.textContent;
+  saveSingleFile(contents, '.json');
+}
+function saveSingleFileAsSeria() {
+  const element = document.getElementById('file-seria-content');
+  const contents = element.textContent;
+  saveSingleFile(contents, '.seria');
+}
+function saveSingleFileAsSeriaMinified() {
+  const keys_to_delete = [
+    //'m_code',  // unknown for crushing game, need more researching
+    //'m_id',  // unknown for crushing game, need more researching
+    //'m_state',  // unknown for crushing game, need more researching
+    //'m_stage',  // unknown for crushing game, need more researching
+    //'m_layer',  // unknown for crushing game, need more researching
+    //'m_health_lock',  // unknown for crushing game, need more researching
+    //'m_tele_',  // unknown for crushing game, need more researching
+    //'m_init_',  // unknown for crushing game, need more researching
+    //'m_mesh_color',  // unknown for crushing game, need more researching
+    //'m_density',  // unknown for crushing game, need more researching
+
+    //'m_mass',  // NOT SAVE: all parts will have 0 weight. WHY, KONSTANTIN?! WHY YOU SAVE SO SENSETIVE DATA TO SAVE?!!
+    'm_burn_hp',  // don't crushing game on load, but is it save for delete? need more researching
+    //'m_animation_',  // NOT SAVE: no any sprites will be shown at open in game
+    'm_type',  // don't crushing game on load, but is it save for delete? need more researching
+    'm_bind',  // don't crushing game on load, but is it save for delete? need more researching
+    'is_loot'  // don't crushing game on load, but is it save for delete? need more researching
+  ];
+  const element = document.getElementById('file-seria-content');
+  let contents = element.textContent.replaceAll('\r', '').split('\n');
+  //let out = [];
+  for (let i = 0; i < contents.length; i++) {
+    let [key, data] = contents[i].split('=');
+    //if (key.startsWith('m_')) key = key.split('m_')[1];
+    for (let ii = 0; ii < keys_to_delete.length; ii++) {
+      if (key.includes(keys_to_delete[ii])) {
+        console.log('delete contents[i]:', contents[i]);
+        delete contents[i];
+        break;
+      };
+    }
+  }
+  console.log('contents:', contents);
+  contents = contents.filter(Boolean); // clears newline
+  saveSingleFile(contents.join('\r\n'), '_min.seria');
+}
 
 function contentProcess() {
   const seria_content = document.getElementById('file-seria-content').textContent;
@@ -343,6 +382,7 @@ function contentProcess() {
     log2html('Convertion mode: seria to json');
     //console.log('seria_content:', seria_content);
     document.getElementById('file-save-as-seria').disabled = false;
+    document.getElementById('file-save-as-seria-minified').disabled = false;
     convertSeriaStringToJson(seria_content);
   } else {
     return alert('No data provided to process!\nPlease clear all before contunue.\nAbort processing.')
@@ -357,6 +397,7 @@ if (document) document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('file-input').addEventListener('change', readSingleFile, false);
   document.getElementById('file-save-as-json').addEventListener('click', saveSingleFileAsJson, false);
   document.getElementById('file-save-as-seria').addEventListener('click', saveSingleFileAsSeria, false);
+  document.getElementById('file-save-as-seria-minified').addEventListener('click', saveSingleFileAsSeriaMinified, false);
   document.getElementById('content-clear').addEventListener('click', clearContents, false);
   document.getElementById('content-process').addEventListener('click', contentProcess, false);
   getUserAgent();

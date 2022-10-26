@@ -44,7 +44,6 @@ function convertSeriaStringToJson(input) {
   input = input.replaceAll('\r\n', '\n');
   let array = input.split('\n');
 
-  displayContents(array);
   array.shift();
   array = array.filter(Boolean); // clears newline
 
@@ -147,9 +146,10 @@ function convertSeriaStringToJson(input) {
   log2html('arr_dup_keys:', arr_dup_keys, '\n');
 
   let stringified = JSON.stringify(json, undefined, 2);
-  //displayContents(stringified);
-  const element = document.getElementById('file-content');
-  element.textContent = stringified;
+  //const element = document.getElementById('file-seria-content');
+  //element.textContent = stringified;
+  displayContents(stringified, 'file-json-content');
+  document.getElementById('file-save-as-json').disabled = false;
 }
 
 // https://stackoverflow.com/a/26298948/8175291
@@ -160,41 +160,74 @@ function readSingleFile(e) {
     log2html('Nothing to read here.');
     return;
   }
+  if (!file.name.includes('.')) return alert('File has no extesion! Abort reading.');
+  const extesion = file.name.split('.')[1];
+  if (!['seria', 'json'].includes(extesion)) return alert('File has unknown extesion!\nAccepts only «.seria» or «.json» files.\nAbort reading.');
+
   onBusyStart();
   console.debug('file name:', file.name);
   log2html('file name:', file.name);
+
   const reader = new FileReader();
   reader.onload = (e) => {
     const contents = e.target.result;
-    displayContents(contents);
   };
-  reader.readAsText(file);
+
+  reader.addEventListener("load", () => {
+    // this will then display a text file
+    const contents_raw = reader.result;
+    if (extesion == 'seria') {
+      displayContents(contents_raw, 'file-seria-content');
+      document.getElementById('file-save-as-seria').disabled = false;
+      convertSeriaStringToJson(contents_raw);
+    } else if (extesion == 'json') {
+      const contents_json = JSON.parse(contents_raw);
+      displayContents(JSON.stringify(contents_json, undefined, 2), 'file-json-content');
+      document.getElementById('file-save-as-json').disabled = false;
+    } else {
+      return alert('Unknown error occurred!\nDetails: extesion "' + extesion + '".\nAbort reading.');
+    }
+  }, false);
+
+  if (file) {
+    reader.readAsText(file);
+  }
   onBusyEnd()
 }
 
-function displayContents(contents) {
-  const element = document.getElementById('file-content');
+function displayContents(contents, target) {
+  const element = document.getElementById(target);
   element.textContent = contents;
-  document.getElementById('file-save').disabled = false;
   document.getElementById('content-clear').disabled = false;
-  convertSeriaStringToJson(contents);
   //console.log('contents:\n', contents);
 }
 
 function clearContents() {
-  //window.location.reload();
   document.getElementById('file-input').value = null;
-  document.getElementById('file-content').textContent = '';
+  document.getElementById('file-seria-content').textContent = '';
+  document.getElementById('file-json-content').textContent = '';
   document.getElementById('log').textContent = '';
-  document.getElementById('file-save').disabled = true;
+  document.getElementById('file-save-as-json').disabled = true;
+  document.getElementById('file-save-as-seria').disabled = true;
   document.getElementById('content-clear').disabled = true;
 }
 
+function saveSingleFileAsJson() {
+  const element = document.getElementById('file-json-content');
+  const contents = element.textContent;
+  saveSingleFile(contents, 'json');
+}
+function saveSingleFileAsSeria() {
+  const element = document.getElementById('file-seria-content');
+  const contents = element.textContent;
+  saveSingleFile(contents, 'seria');
+}
+
 // https://stackoverflow.com/a/58356250/8175291
-function saveSingleFile() {
-  const contents = document.getElementById('file-content').textContent;
+function saveSingleFile(contents, extesion) {
   let file_name = document.getElementById('file-input').files[0].name;
-  if (file_name.includes('.')) file_name = file_name.split('.')[0] + '.json';
+  if (!file_name.includes('.')) return console.error('File has no extesion! Abort downloading.');
+  file_name = file_name.split('.')[0] + '.' + extesion;
   if (contents == '') {
     console.warn('Nothing to save here.');
     log2html('Nothing to save here.');
@@ -234,6 +267,7 @@ function saveSingleFile() {
 
 if (document) document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('file-input').addEventListener('change', readSingleFile, false);
-  document.getElementById('file-save').addEventListener('click', saveSingleFile, false);
+  document.getElementById('file-save-as-json').addEventListener('click', saveSingleFileAsJson, false);
+  document.getElementById('file-save-as-seria').addEventListener('click', saveSingleFileAsSeria, false);
   document.getElementById('content-clear').addEventListener('click', clearContents, false);
 });

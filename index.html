@@ -27,12 +27,14 @@
   <fieldset>
     <legend>Actions and options</legend>
     <div>
-      <button type="button" id="content-clear" disabled>Clear</button>
-      <button type="button" id="file-save" disabled>Save (as json)</button>
       <!-- <button type="button" id="load-example" disabled>Load example</button> -->
-      <input type="file" id="file-input" accept=".seria, .txt" />
+      <input type="file" id="file-input" accept=".seria, .json" />
       <!-- The `multiple` attribute lets users select multiple files. -->
       <!-- <input type="file" id="file-selector" multiple> -->
+      <br>
+      <button type="button" id="content-clear" disabled>Clear</button>
+      <button type="button" id="file-save-as-json" disabled>Save (as json)</button>
+      <button type="button" id="file-save-as-seria" disabled>Save (as seria)</button>
       <hr>
       <input type="checkbox" id="output_log" name="output_log" unchecked>
       <label for="output_log">Output log below output <small>(warning: may be heavy for process)</small></label>
@@ -41,11 +43,15 @@
 
   <h3>Output</h3>
   <div>
-    <textarea id="file-content" placeholder="Select «.seria» file above to continue..." type="text"></textarea>
+    <h4>seria</h4>
+    <textarea id="file-seria-content" placeholder="Select «.seria» file above to continue..." type="text"></textarea>
+
+    <h4>json</h4>
+    <textarea id="file-json-content" placeholder="Select «.json file above to continue..." type="text"></textarea>
+
+    <h4>Log</h4>
+    <pre id="log"></pre>
   </div>
-  <h3>Log</h3>
-  <pre id="log"></pre>
-  <hr>
 </body>
 </html>
 

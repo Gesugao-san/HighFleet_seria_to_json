@@ -15,6 +15,10 @@
 /* @media (prefers-color-scheme: dark) {
 } */
 
+input {
+  padding: 5px 0px;
+}
+
 fieldset {
   width: 97%;
 }
@@ -22,14 +26,14 @@ fieldset {
 pre,
 textarea {
   width: 99%;
-  height: 60vh;
+  height: 20vh;
   display: block;
   padding: 12px 20px;
   box-sizing: border-box;
   border: 2px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
-  resize: none;
+  /* resize: none; */
 }
 
 pre {

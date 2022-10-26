@@ -1,5 +1,14 @@
 
 
+function onBusyStart() {
+  document.body.classList.add('busy');
+  document.body.classList.remove('not-busy');
+}
+function onBusyEnd() {
+  document.body.classList.remove('busy');
+  document.body.classList.add('not-busy');
+}
+
 function log2html(...input) {
   if (!document.getElementById('output_log').checked) return;
   let logger = document.getElementById('log');
@@ -14,7 +23,7 @@ function log2html(...input) {
     if (String(x).includes('DUP')) show_as_warn = true;
     return output += x + ' ';
   });
-  output = output.slice(0, -1); // last space
+  output = output.slice(0, -1); // last space remove
   if (show_as_error) {
     return logger.innerHTML += '<span class="error">' + output + '</span><br />';
   } else if (show_as_warn) {
@@ -30,7 +39,7 @@ function convertSeriaStringToJson(input) {
     log2html('Nothing to convert here.');
     return;
   }
-  setTimeout(() => { alert('Converting in progress, please wait...'); }, 1);
+  //setTimeout(() => { alert('Converting in progress, please wait...'); }, 1);
 
   input = input.replaceAll('\r\n', '\n');
   let array = input.split('\n');
@@ -151,6 +160,7 @@ function readSingleFile(e) {
     log2html('Nothing to read here.');
     return;
   }
+  onBusyStart();
   console.debug('file name:', file.name);
   log2html('file name:', file.name);
   const reader = new FileReader();
@@ -159,6 +169,7 @@ function readSingleFile(e) {
     displayContents(contents);
   };
   reader.readAsText(file);
+  onBusyEnd()
 }
 
 function displayContents(contents) {

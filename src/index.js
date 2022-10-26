@@ -190,23 +190,32 @@ function clearContents() {
   document.getElementById('content-clear').disabled = true;
 }
 
+// https://stackoverflow.com/a/58356250/8175291
 function saveSingleFile() {
   const contents = document.getElementById('file-content').textContent;
+  let file_name = document.getElementById('file-input').files[0].name;
+  if (file_name.includes('.')) file_name = file_name.split('.')[0] + '.json';
   if (contents == '') {
     console.warn('Nothing to save here.');
     log2html('Nothing to save here.');
     return;
   }
   const blob = new Blob([contents]); //, {type: "application/text"}); //, encoding: "UTF-8"
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.target = "_blank";
-  link.href = url;
-  link.click();
-  console.log('link:', link);
-  console.log('url:', url);
-  log2html('link:', link);
-  log2html('url:', url);
+  if (typeof navigator.msSaveBlob == "function")
+      return navigator.msSaveBlob(blob, file_name);
+
+  var saver = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+  var blobURL = saver.href = URL.createObjectURL(blob),
+      body = document.body;
+
+  saver.download = file_name;
+
+  body.appendChild(saver);
+  saver.dispatchEvent(new MouseEvent("click"));
+  console.log('url:', blobURL);
+  log2html('url:', blobURL);
+  body.removeChild(saver);
+  URL.revokeObjectURL(blobURL);
 }
 
 (() => {

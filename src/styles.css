@@ -55,6 +55,11 @@ pre {
 #log span.error {
   color: red;
 }
+#log span.placeholder {
+  color: #757575;
+}
+
+
 
 body.busy, .busy * {
   cursor: wait !important;

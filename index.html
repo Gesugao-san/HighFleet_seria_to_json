@@ -32,7 +32,7 @@
       <!-- The `multiple` attribute lets users select multiple files. -->
       <!-- <input type="file" id="file-selector" multiple> -->
       <br>
-      <button type="button" id="content-clear" disabled>Clear</button>
+      <button type="button" id="content-clear" disabled>Clear all</button>
       <button type="button" id="file-save-as-json" disabled>Save (as json)</button>
       <button type="button" id="file-save-as-seria" disabled>Save (as seria)</button>
       <hr>
@@ -43,14 +43,14 @@
 
   <h3>Output</h3>
   <div>
-    <h4>seria</h4>
-    <textarea id="file-seria-content" placeholder="Select «.seria» file above to continue..." type="text"></textarea>
+    <h4>File content as «.seria»</h4>
+    <textarea id="file-seria-content" placeholder="Select file above to continue..." type="text"></textarea>
 
-    <h4>json</h4>
-    <textarea id="file-json-content" placeholder="Select «.json file above to continue..." type="text"></textarea>
+    <h4>File content as «.json» <small>(indentation: 2 space)</small></h4>
+    <textarea id="file-json-content" placeholder="Select file above to continue..." type="text"></textarea>
 
     <h4>Log</h4>
-    <pre id="log"></pre>
+    <pre id="log"><span class="placeholder">Select file above and mark option to continue...</span></pre>
   </div>
 </body>
 </html>

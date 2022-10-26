@@ -152,7 +152,6 @@ function convertSeriaStringToJson(input) {
   //element.textContent = stringified;
   displayContents(stringified, 'file-json-content');
   document.getElementById('file-save-as-json').disabled = false;
-  return;
 }
 
 
@@ -206,6 +205,8 @@ function readSingleFile(e) {
   if (!['seria', 'json'].includes(extesion)) return alert('File has unknown extesion!\nAccepts only «.seria» or «.json» files.\nAbort reading.');
 
   onBusyStart();
+  clearContentsSoft();
+  if (document.getElementById('output_log').checked) document.getElementById('log').textContent = '';
   console.debug('file name:', file.name);
   log2html('file name:', file.name);
 
@@ -229,6 +230,7 @@ function readSingleFile(e) {
     } else {
       return alert('Unknown error occurred!\nDetails: extesion "' + extesion + '".\nAbort reading.');
     }
+    if (window && window.navigator && window.navigator.userAgent) console.debug('userAgent:', window.navigator.userAgent);
   }, false);
 
   if (file) {
@@ -246,9 +248,16 @@ function displayContents(contents, target) {
 
 function clearContents() {
   document.getElementById('file-input').value = null;
+  clearContentsSoft();
+}
+function clearContentsSoft() {
+  let log_placeholder_span = document.createElement('span');
+  log_placeholder_span.classList.add('placeholder');
+  log_placeholder_span.innerHTML = 'Select file above and mark option to continue...';
+  document.getElementById('file-input').value = null;
+  document.getElementById('log').textContent = log_placeholder_span.innerHTML;
   document.getElementById('file-seria-content').textContent = '';
   document.getElementById('file-json-content').textContent = '';
-  document.getElementById('log').textContent = '';
   document.getElementById('file-save-as-json').disabled = true;
   document.getElementById('file-save-as-seria').disabled = true;
   document.getElementById('content-clear').disabled = true;
@@ -295,20 +304,6 @@ function saveSingleFile(contents, extesion) {
 }
 
 
-
-(() => {
-  /* var old = console.log;
-  var logger = document.getElementById('console.log');
-  console.log = function () {
-    for (var i = 0; i < arguments.length; i++) {
-      if (typeof arguments[i] == 'object') {
-          logger.innerHTML += (JSON && JSON.stringify ? JSON.stringify(arguments[i], undefined, 2) : arguments[i]) + '<br />';
-      } else {
-          logger.innerHTML += arguments[i] + '<br />';
-      }
-    }
-  } */
-});
 
 if (document) document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('file-input').addEventListener('change', readSingleFile, false);

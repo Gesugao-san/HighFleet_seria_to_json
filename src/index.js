@@ -282,7 +282,6 @@ function clearContentsSoft() {
   document.getElementById('log').textContent = log_placeholder_span.innerHTML;
   document.getElementById('file-seria-content').textContent = '';
   document.getElementById('file-json-content').textContent = '';
-  document.getElementById('file-input').value = null;
   document.getElementById('content-clear').disabled = true;
   document.getElementById('content-process').disabled = true;
   document.getElementById('file-save-as-json').disabled = true;

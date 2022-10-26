@@ -23,10 +23,16 @@ fieldset {
   width: 97%;
 }
 
+h3,
+h4 {
+  padding: 0px 0px;
+  margin: 8px 10px;
+}
+
 pre,
 textarea {
   width: 99%;
-  height: 20vh;
+  height: 22vh;
   display: block;
   padding: 12px 20px;
   box-sizing: border-box;

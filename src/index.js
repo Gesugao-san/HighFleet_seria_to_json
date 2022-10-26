@@ -204,6 +204,7 @@ function readSingleFile(e) {
   const extesion = file.name.split('.')[1];
   if (!['seria', 'json'].includes(extesion)) return alert('File has unknown extesion!\nAccepts only «.seria» or «.json» files.\nAbort reading.');
 
+  console.clear();
   onBusyStart();
   clearContentsSoft();
   if (document.getElementById('output_log').checked) document.getElementById('log').textContent = '';
@@ -304,6 +305,8 @@ function saveSingleFile(contents, extesion) {
 }
 
 
+/* (() => {
+})(); */
 
 if (document) document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('file-input').addEventListener('change', readSingleFile, false);

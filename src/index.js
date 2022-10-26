@@ -249,7 +249,7 @@ function readSingleFile(e) {
       //convertJsonStringToSeria(contents_json);
       document.getElementById('content-process').disabled = false;
     } else {
-      return alert('Unknown error occurred!\nDetails: extesion "' + extesion + '". Please clear all before contunue.\nAbort reading.');
+      return alert('Unknown error occurred!\nDetails: extesion "' + extesion + '".\nAbort reading.');
     }
   }, false);
 
@@ -337,14 +337,16 @@ function contentProcess() {
   if (seria_content == '') {
     console.log('Convertion mode: json to seria');
     log2html('Convertion mode: json to seria');
+    document.getElementById('file-save-as-json').disabled = false;
     convertJsonStringToSeria(json_content);
   } else if (json_content_raw == '') {
     console.log('Convertion mode: seria to json');
     log2html('Convertion mode: seria to json');
     //console.log('seria_content:', seria_content);
+    document.getElementById('file-save-as-seria').disabled = false;
     convertSeriaStringToJson(seria_content);
   } else {
-    return alert('No data provided to process!\nAbort processing.')
+    return alert('No data provided to process!\nPlease clear all before contunue.\nAbort processing.')
   }
 }
 

@@ -33,13 +33,13 @@ function log2html(...input) {
   }
 }
 
+
 function convertSeriaStringToJson(input) {
   if (!input || typeof input != 'string') {
     console.warn('Nothing to convert here.');
     log2html('Nothing to convert here.');
     return;
   }
-  //setTimeout(() => { alert('Converting in progress, please wait...'); }, 1);
 
   input = input.replaceAll('\r\n', '\n');
   let array = input.split('\n');
@@ -71,6 +71,8 @@ function convertSeriaStringToJson(input) {
       depth_level -= 1;
       return '},';
     }
+
+    // TODO: FIX LEVELS!
     if (!isNaN(entry)) {
       if (!brackets_and_unnamed_nums[depth_level]) {
         brackets_and_unnamed_nums[depth_level] = {
@@ -150,7 +152,46 @@ function convertSeriaStringToJson(input) {
   //element.textContent = stringified;
   displayContents(stringified, 'file-json-content');
   document.getElementById('file-save-as-json').disabled = false;
+  return;
 }
+
+
+function convertJsonStringToSeria(input) {
+  if (!input || typeof input != 'object') {
+    console.warn('Nothing to convert here.');
+    log2html('Nothing to convert here.');
+    return;
+  }
+
+  input = JSON.stringify(input, undefined, '\t');
+  input = input.replaceAll('\t', '').replaceAll('"', '').replaceAll(': ', '=');
+  let array = input.split('\n');
+
+  for (let i = 0; i < array.length; i++) {
+    const element = array[i];
+    if (element.includes('unnamed__num')) {
+      let element_splitted = element.split('=')[1];
+      array[i] = element_splitted;
+    }
+    if (element.includes('__num')) {
+      let element_splitted = element.split('=')[0].split('__num')[0] + '=' + element.split('=')[1];
+      array[i] = element_splitted;
+    }
+    if (element.includes('__dup')) {
+      let element_splitted = element.split('=')[0].split('__dup')[0] + '=' + element.split('=')[1];
+      array[i] = element_splitted;
+    }
+  }
+
+  array = array.join('\n');
+
+  console.log('seria:\n', array);
+  log2html('\nseria:', array, '\n');
+
+  displayContents(array, 'file-seria-content');
+  document.getElementById('file-save-as-seria').disabled = false;
+}
+
 
 // https://stackoverflow.com/a/26298948/8175291
 function readSingleFile(e) {
@@ -169,9 +210,9 @@ function readSingleFile(e) {
   log2html('file name:', file.name);
 
   const reader = new FileReader();
-  reader.onload = (e) => {
+  /* reader.onload = (e) => {
     const contents = e.target.result;
-  };
+  }; */
 
   reader.addEventListener("load", () => {
     // this will then display a text file
@@ -184,6 +225,7 @@ function readSingleFile(e) {
       const contents_json = JSON.parse(contents_raw);
       displayContents(JSON.stringify(contents_json, undefined, 2), 'file-json-content');
       document.getElementById('file-save-as-json').disabled = false;
+      convertJsonStringToSeria(contents_json);
     } else {
       return alert('Unknown error occurred!\nDetails: extesion "' + extesion + '".\nAbort reading.');
     }
@@ -192,7 +234,7 @@ function readSingleFile(e) {
   if (file) {
     reader.readAsText(file);
   }
-  onBusyEnd()
+  onBusyEnd();
 }
 
 function displayContents(contents, target) {
@@ -211,6 +253,7 @@ function clearContents() {
   document.getElementById('file-save-as-seria').disabled = true;
   document.getElementById('content-clear').disabled = true;
 }
+
 
 function saveSingleFileAsJson() {
   const element = document.getElementById('file-json-content');
@@ -250,6 +293,8 @@ function saveSingleFile(contents, extesion) {
   body.removeChild(saver);
   URL.revokeObjectURL(blobURL);
 }
+
+
 
 (() => {
   /* var old = console.log;

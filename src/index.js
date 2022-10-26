@@ -1,5 +1,11 @@
 
 
+
+function getUserAgent() {
+  console.clear();
+  if (window && window.navigator && window.navigator.userAgent) console.debug('userAgent:', window.navigator.userAgent);
+}
+
 function onBusyStart() {
   document.body.classList.add('busy');
   document.body.classList.remove('not-busy');
@@ -40,6 +46,9 @@ function convertSeriaStringToJson(input) {
     log2html('Nothing to convert here.');
     return;
   }
+
+  console.log('Seria to json converting in process...');
+  log2html('Seria to json converting in process...');
 
   input = input.replaceAll('\r\n', '\n');
   let array = input.split('\n');
@@ -152,15 +161,21 @@ function convertSeriaStringToJson(input) {
   //element.textContent = stringified;
   displayContents(stringified, 'file-json-content');
   document.getElementById('file-save-as-json').disabled = false;
+
+  console.log('Seria to json converting done.');
+  log2html('Seria to json converting done.');
 }
 
 
 function convertJsonStringToSeria(input) {
   if (!input || typeof input != 'object') {
-    console.warn('Nothing to convert here.');
+    console.warn('Nothing to convert here.', typeof input); //, '\n', input)
     log2html('Nothing to convert here.');
     return;
   }
+
+  console.log('Json to seria converting in process...');
+  log2html('Json to seria converting in process...');
 
   input = JSON.stringify(input, undefined, '\t');
   input = input.replaceAll('\t', '').replaceAll('"', '').replaceAll(': ', '=');
@@ -184,8 +199,10 @@ function convertJsonStringToSeria(input) {
 
   array = array.join('\n');
 
-  console.log('seria:\n', array);
-  log2html('\nseria:', array, '\n');
+  //console.log('seria:\n', array);
+  //log2html('\nseria:', array, '\n');
+  console.log('Json to seria converting done.');
+  log2html('Json to seria converting done.');
 
   displayContents(array, 'file-seria-content');
   document.getElementById('file-save-as-seria').disabled = false;
@@ -204,9 +221,12 @@ function readSingleFile(e) {
   const extesion = file.name.split('.')[1];
   if (!['seria', 'json'].includes(extesion)) return alert('File has unknown extesion!\nAccepts only «.seria» or «.json» files.\nAbort reading.');
 
-  console.clear();
   onBusyStart();
   clearContentsSoft();
+
+  console.log('Reading file in process...');
+  log2html('Reading file in process...');
+
   if (document.getElementById('output_log').checked) document.getElementById('log').textContent = '';
   console.debug('file name:', file.name);
   log2html('file name:', file.name);
@@ -221,23 +241,25 @@ function readSingleFile(e) {
     const contents_raw = reader.result;
     if (extesion == 'seria') {
       displayContents(contents_raw, 'file-seria-content');
-      document.getElementById('file-save-as-seria').disabled = false;
-      convertSeriaStringToJson(contents_raw);
+      //convertSeriaStringToJson(contents_raw);
+      document.getElementById('content-process').disabled = false;
     } else if (extesion == 'json') {
       const contents_json = JSON.parse(contents_raw);
       displayContents(JSON.stringify(contents_json, undefined, 2), 'file-json-content');
-      document.getElementById('file-save-as-json').disabled = false;
-      convertJsonStringToSeria(contents_json);
+      //convertJsonStringToSeria(contents_json);
+      document.getElementById('content-process').disabled = false;
     } else {
       return alert('Unknown error occurred!\nDetails: extesion "' + extesion + '".\nAbort reading.');
     }
-    if (window && window.navigator && window.navigator.userAgent) console.debug('userAgent:', window.navigator.userAgent);
   }, false);
 
   if (file) {
     reader.readAsText(file);
   }
   onBusyEnd();
+
+  console.log('Reading file done.');
+  log2html('Reading file done.');
 }
 
 function displayContents(contents, target) {
@@ -255,10 +277,11 @@ function clearContentsSoft() {
   let log_placeholder_span = document.createElement('span');
   log_placeholder_span.classList.add('placeholder');
   log_placeholder_span.innerHTML = 'Select file above and mark option to continue...';
-  document.getElementById('file-input').value = null;
   document.getElementById('log').textContent = log_placeholder_span.innerHTML;
   document.getElementById('file-seria-content').textContent = '';
   document.getElementById('file-json-content').textContent = '';
+  document.getElementById('file-input').value = null;
+  document.getElementById('content-process').disabled = true;
   document.getElementById('file-save-as-json').disabled = true;
   document.getElementById('file-save-as-seria').disabled = true;
   document.getElementById('content-clear').disabled = true;
@@ -304,6 +327,25 @@ function saveSingleFile(contents, extesion) {
   URL.revokeObjectURL(blobURL);
 }
 
+function contentProcess() {
+  const seria_content = document.getElementById('file-seria-content').textContent;
+  const json_content_raw = document.getElementById('file-json-content').textContent;
+  const json_content = JSON.parse(json_content_raw != '' ? json_content_raw : '{}');
+
+  if (seria_content == '') {
+    console.log('Convertion mode: json to seria');
+    log2html('Convertion mode: json to seria');
+    convertJsonStringToSeria(json_content);
+  } else if (json_content_raw == '') {
+    console.log('Convertion mode: seria to json');
+    log2html('Convertion mode: seria to json');
+    //console.log('seria_content:', seria_content);
+    convertSeriaStringToJson(seria_content);
+  } else {
+    return alert('No data provided to process!\nAbort processing.')
+  }
+}
+
 
 /* (() => {
 })(); */
@@ -313,4 +355,6 @@ if (document) document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('file-save-as-json').addEventListener('click', saveSingleFileAsJson, false);
   document.getElementById('file-save-as-seria').addEventListener('click', saveSingleFileAsSeria, false);
   document.getElementById('content-clear').addEventListener('click', clearContents, false);
+  document.getElementById('content-process').addEventListener('click', contentProcess, false);
+  getUserAgent();
 });

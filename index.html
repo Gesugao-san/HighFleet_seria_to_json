@@ -38,9 +38,12 @@
       <!-- The `multiple` attribute lets users select multiple files. -->
       <!-- <input type="file" id="file-selector" multiple> -->
       <br>
-      <button type="button" id="content-clear" disabled>Clear all</button>
+      <button type="button" id="content-clear" style="margin-bottom: 5px;" disabled>Clear all</button>
+      <button type="button" id="content-process" disabled>Process</button>
+      <br>
       <button type="button" id="file-save-as-json" disabled>Save (as json)</button>
       <button type="button" id="file-save-as-seria" disabled>Save (as seria)</button>
+      <button type="button" id="file-save-as-seria-minified" disabled>Save (as minified seria)</button>
       <hr>
       <input type="checkbox" id="output_log" name="output_log" unchecked>
       <label for="output_log">Output log below output <small>(warning: may be heavy for process)</small></label>
@@ -50,13 +53,13 @@
   <h3>Output</h3>
   <div>
     <h4>File content as «.seria»</h4>
-    <textarea id="file-seria-content" placeholder="Select file above to continue..." type="text"></textarea>
+    <textarea id="file-seria-content" placeholder="Select file above to continue..." type="text" readonly></textarea>
 
     <h4>File content as «.json» <small>(indentation: 2 space)</small></h4>
-    <textarea id="file-json-content" placeholder="Select file above to continue..." type="text"></textarea>
+    <textarea id="file-json-content" placeholder="Select file above to continue..." type="text" readonly></textarea>
 
     <h4>Log</h4>
-    <pre id="log"><span class="placeholder">Select file above and mark option to continue...</span></pre>
+    <pre id="log" readonly><span class="placeholder">Select file above and mark option to continue...</span></pre>
   </div>
 
   <!-- <script src="src/3rd/TextAreaLineNumbersWithCanvas.js" defer></script> -->

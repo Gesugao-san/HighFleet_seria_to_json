@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="color-scheme" content="dark light">
+  <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+  <title>HighFleet «.seria» ship editor</title>
+
+  <link rel="stylesheet" href="../styles.css">
+
+  <!-- TODO: Add "https://www.html5canvastutorials.com/advanced/html5-canvas-mouse-coordinates/" -->
+</head>
+<body class="not-busy">
+  <h3>HighFleet «.seria» ship editor</h3>
+  <fieldset>
+    <div>
+      <div id="images">
+      </div>
+      <canvas onmousemove="draw(event)" style="margin: 0; padding: 0;" id="imgCanvas" class="canvasView" width="500" height="500"></canvas>
+    </div>
+  </fieldset>
+
+  <h3>Output</h3>
+  <div>
+    <h4>Log</h4>
+    <pre id="log" readonly><span class="placeholder">Select file above and mark option to continue...</span></pre>
+  </div>
+
+  <script src="../3rd/canvasPaint.js"></script>
+</body>
+</html>
+

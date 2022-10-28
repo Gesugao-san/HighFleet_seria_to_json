@@ -342,11 +342,11 @@ function saveSingleFileAsSeriaMinified() {
     //'m_density',  // unknown for crushing game, need more researching
 
     //'m_mass',  // NOT SAVE: all parts will have 0 weight. WHY, KONSTANTIN?! WHY YOU SAVE SO SENSETIVE DATA TO SAVE?!!
-    'm_burn_hp',  // don't crushing game on load, but is it save for delete? need more researching
+    'm_burn_hp',  // don't crushing game on load, but is it sensetive for gameplay? need more researching
     //'m_animation_',  // NOT SAVE: no any sprites will be shown at open in game
-    'm_type',  // don't crushing game on load, but is it save for delete? need more researching
-    'm_bind',  // don't crushing game on load, but is it save for delete? need more researching
-    'is_loot'  // don't crushing game on load, but is it save for delete? need more researching
+    'm_type',  // don't crushing game on load, but is it sensetive for gameplay? need more researching
+    'm_bind',  // don't crushing game on load, but is it sensetive for gameplay? need more researching
+    'is_loot'  // don't crushing game on load, but is it sensetive for gameplay? need more researching
   ];
   const element = document.getElementById('file-seria-content');
   let contents = element.textContent.replaceAll('\r', '').split('\n');

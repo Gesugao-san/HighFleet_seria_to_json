@@ -32,7 +32,12 @@ const isSymbol = {
 
 
 (() => {
-  s = '{\r\nm_classname=2\r\n{\r\n3=4\r\n}\r\n5=6\r\n6=6\r\n6=6\r\n}\r\n';
+  s = [
+    '{\r\nm_classname=Node\r\nm_rnd_key1=data\r\nm_rnd_key2=data',
+    '{\r\nm_classname=Body\r\nm_rnd_key1=data\r\nm_rnd_key2=data',
+    '}\r\nm_classname=Body\r\nm_rnd_key1=data\r\nm_rnd_key2=data',
+    '}\r\n'
+  ].join('\r\n');  // SAMPLE DATA
   console.log('s:', [JSON.stringify(s)]);
   a = s.replaceAll('\r', '').split('\n');
   a = clearArrayFromEmptyElements(a);

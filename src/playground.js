@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 let a = [];
-let s = '';
+let s, s2 = '';
 /*
 s = '{\r\n1=2\r\n{\r\n3=4\r\n}\r\n5=6\r\n6=6\r\n6=6\r\n}\r\n';
 const brackets = {
@@ -38,7 +38,27 @@ const isSymbol = {
     '}\r\nm_classname=Body\r\nm_rnd_key1=data\r\nm_rnd_key2=data',
     '}\r\n'
   ].join('\r\n');  // SAMPLE DATA
-  console.log('s:', [JSON.stringify(s)]);
+  console.log('s:', [JSON.stringify(s)], '\n', s);
+
+  s2 = s + '}█';
+  s2 = s2.replaceAll('\r', '').replaceAll('\n', '\r\n').replaceAll('\r\n\r\n', '\r\n');
+  s2 = s
+    .replace('{', '[[')
+    .replace('}\r\n}█', ']]')
+    .replace('}\n}█', ']]')
+    .replaceAll('{', '[')
+    .replaceAll('}', ']')
+    .replaceAll('=', '":"')
+    .replaceAll('\r\n', '"\r\n"')
+    .replaceAll('"\r\n', '",\r\n')
+    .replaceAll('[",\r\n', '[\r\n')
+    .replaceAll('\r\n"]', '\r\n]')
+    .replaceAll(']",\r\n', ']\r\n')
+    .replaceAll('\r\n"[', '\r\n[');
+
+  s2 = JSON.parse(s2);
+  console.log('s2:', s2);
+
   a = s.replaceAll('\r', '').split('\n');
   a = clearArrayFromEmptyElements(a);
   console.log('a:', a);

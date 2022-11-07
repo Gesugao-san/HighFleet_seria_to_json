@@ -244,11 +244,13 @@ function readSingleFile(e) {
       displayContents(contents_raw, 'file-seria-content');
       //convertSeriaStringToJson(contents_raw);
       document.getElementById('content-process').disabled = false;
+      document.getElementById('generate-empty-ship-file').disabled = true;
     } else if (extesion == 'json') {
       const contents_json = JSON.parse(contents_raw);
       displayContents(JSON.stringify(contents_json, undefined, 2), 'file-json-content');
       //convertJsonStringToSeria(contents_json);
       document.getElementById('content-process').disabled = false;
+      document.getElementById('generate-empty-ship-file').disabled = true;
     } else {
       return alert('Unknown error occurred!\nDetails: extesion "' + extesion + '".\nAbort reading.');
     }
@@ -260,6 +262,7 @@ function readSingleFile(e) {
 
   onBusyEnd();
   document.getElementById('content-process').disabled = false;
+  document.getElementById('generate-empty-ship-file').disabled = true;
 
   console.log('Reading file done.');
   log2html('Reading file done.');
@@ -288,6 +291,7 @@ function clearContentsSoft() {
   document.getElementById('file-save-as-json').disabled = true;
   document.getElementById('file-save-as-seria').disabled = true;
   document.getElementById('file-save-as-seria-minified').disabled = true;
+  document.getElementById('generate-empty-ship-file').disabled = false;
 }
 
 
@@ -393,7 +397,52 @@ function contentProcess() {
 /* (() => {
 })(); */
 
+/* function check_func_exist(func, ...types) {
+  if (types.includes(typeof func)) {
+    return true;
+  } else {
+    return false;
+  }
+} */
+
+function _injector() {
+  const data = [
+    ['file-input', 'change', readSingleFile, false],
+    ['file-save-as-json', 'click', saveSingleFileAsJson, false],
+    ['file-save-as-seria', 'click', saveSingleFileAsSeria, false],
+    ['file-save-as-seria-minified', 'click', saveSingleFileAsSeriaMinified, false],
+    ['content-clear', 'click', clearContents, false],
+    ['content-process', 'click', contentProcess, false],
+  ];
+  //if (['object', 'function'].includes(typeof getEventListeners)) {
+  if (typeof getEventListeners !== 'function') {
+    console.warn('Your browser is not supported getEventListeners.');
+    for (let i = 0; i < data.length; i++) {
+      const [elementId, eventName, funcName, eventOptions] = data[i];
+      let elementDOM = document.getElementById(elementId);
+      if (!elementDOM) continue;
+      elementDOM.addEventListener(eventName, funcName, eventOptions);
+      //document.getElementById(data[i][0]).addEventListener(data[i][1], data[i][2], data[i][3]);
+    }
+  } else {
+    for (let i = 0; i < data.length; i++) {
+      const [elementId, eventName, funcName, eventOptions] = data[i];
+      let elementDOM = document.getElementById(elementId);
+      if (!elementDOM) continue;
+      // if (Object.keys(getEventListeners(elementDOM)).length == 0)
+      if (!getEventListeners(elementDOM)[eventName]) {
+        elementDOM.addEventListener(eventName, funcName, eventOptions);
+        //document.getElementById(data[i][0]).addEventListener(data[i][1], data[i][2], data[i][3]);
+      }
+    }
+  }
+  getUserAgent();
+  return false;
+}
+
 if (document) document.addEventListener('DOMContentLoaded', () => {
+  _injector();
+  /*
   document.getElementById('file-input').addEventListener('change', readSingleFile, false);
   document.getElementById('file-save-as-json').addEventListener('click', saveSingleFileAsJson, false);
   document.getElementById('file-save-as-seria').addEventListener('click', saveSingleFileAsSeria, false);
@@ -401,4 +450,5 @@ if (document) document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('content-clear').addEventListener('click', clearContents, false);
   document.getElementById('content-process').addEventListener('click', contentProcess, false);
   getUserAgent();
+  */
 });
